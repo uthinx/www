@@ -22,8 +22,9 @@ var Poll = {
       poll_invitation_circles : 'array',
       poll_start_timestamp : 'timestamp',
       poll_invitation_entities : 'array',
-      poll_start_timestamp : 'timestamp',
-      poll_creator_entity_id : 'integer'
+      poll_creator_entity_id : 'integer',
+      poll_type : 'string',
+      poll_type_id : 'string'
   }
 
 };

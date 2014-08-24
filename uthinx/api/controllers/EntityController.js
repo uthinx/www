@@ -21,7 +21,7 @@ var EntityController = {
     create: function (req, res) {
         var response = { "ok": false, "id": req.param('id') };
 
-        Entity.create(setEntityFields({}, req)).done(function (err, entity) {
+        Entity.create(_setEntityFields({}, req)).done(function (err, entity) {
             // Error handling
             if (err) {
                 response.err = err;
@@ -50,11 +50,12 @@ var EntityController = {
                 return res.json(response);
                 //return res.send("No other chicken with that id exists!", 404);
             }
-            else if (entity && entity.length > 0) {
+            else if (entity && entity.length === 1) {
                 //need to add the polls that the entity has relations with
                 response.ok = true;
-                entity.polls = getEntityPolls(entity._id);
 
+                entity[0].polls = _getEntityPolls(entity[0]._id);
+                entity[0].entity_profile_img = _setEntityImg(entity[0]);
 
                 return res.json(entity);
             } else {
@@ -113,9 +114,12 @@ var EntityController = {
                 return res.json(response);
                 //return res.send("No other chicken with that id exists!", 404);
             }
-            else if (entity && entity.length > 0) {
+            else if (entity && entity.length === 1) {
                 //need to add the polls that the entity has relations with
                 response.ok = true;
+                entity[0].polls = _getEntityPolls(entity[0]._id);
+                entity[0].entity_profile_img = _setEntityImg(entity[0]);
+
                 return res.json(entity);
             } else {
                 // For example
@@ -150,7 +154,7 @@ var EntityController = {
                 return res.json(response);
             } else {
                 //sets the new fields if they are their
-                entity = setEntityFields(entity, req);
+                entity = _setEntityFields(entity, req);
 
                 entity.save(function (err) {
                     if (err) {
@@ -173,7 +177,11 @@ var EntityController = {
     }
 };
 
-function getEntityPolls(id) {
+function _setEntityImg (entity){
+    return (entity.entity_facebook_ID) ? "http://graph.facebook.com/" + entity.entity_facebook_ID + "/picture?height=65&type=normal&width=65" : entity.ntity_profile_img;
+}
+
+function _getEntityPolls(id) {
     var params = { poll_creator_entity_id: id, poll_invitation_entities: { $in: [ id ] } };
 
     Poll.find(params).exec(function (err, polls) {
@@ -190,7 +198,7 @@ function getEntityPolls(id) {
     });
 };
 
-function setEntityFields(entity, req) {
+function _setEntityFields(entity, req) {
     var e = entity || {};
 
     e.entity_first_name = (req.param('entity_first_name')) ? req.param('entity_first_name') : e.entity_first_name;

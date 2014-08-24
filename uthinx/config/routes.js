@@ -109,6 +109,14 @@ module.exports.routes = {
         controller: 'polltypes',
         action: 'destroy'
     },
+    'get /mmenu/:id': {
+        controller: 'mmenu',
+        action: 'read'
+    },
+    'get /mmenu': {
+        controller: 'mmenu',
+        action: 'read'
+    },
     //base line default that catches all
     'get /*': {
         controller: 'device',
