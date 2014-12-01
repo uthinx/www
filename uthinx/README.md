@@ -1,2 +1,0 @@
-# uthinx
-### a Sails application
